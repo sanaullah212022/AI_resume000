@@ -1,0 +1,78 @@
+# 📄 ATS Resume Checker
+
+A Streamlit app that scores your resume for Applicant Tracking Systems (ATS) and tells you exactly how to improve it, powered by Google Gemini Flash.
+
+## Features
+
+- Upload a resume as **PDF, DOCX or TXT**
+- Optional **job description** for a role-specific score and keyword gap
+- **ATS score (0-100)** plus a breakdown: keywords, formatting, experience, education & skills, readability
+- Prioritised **improvement suggestions** (High / Medium / Low)
+- **Missing vs. found keywords**
+- **Bullet-point rewrites** (never invents facts; uses placeholders like `[X%]`)
+- Quick local checks: email, phone, LinkedIn, sections detected, length
+- Download the full report as JSON
+
+## Run locally
+
+```bash
+git clone https://github.com/<your-username>/ats-resume-checker.git
+cd ats-resume-checker
+
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+streamlit run app.py
+```
+
+Get a free Gemini API key at <https://aistudio.google.com/apikey>. You can either paste it into the sidebar, or set it once:
+
+```bash
+export GEMINI_API_KEY="your-key"        # Windows (PowerShell): $env:GEMINI_API_KEY="your-key"
+```
+
+## Deploy on Streamlit Community Cloud
+
+1. Push this repo to GitHub (see below).
+2. Go to <https://share.streamlit.io> and sign in with GitHub.
+3. Click **Create app**, pick your repo, branch `main`, and main file `app.py`.
+4. Open **Advanced settings → Secrets** and add:
+   ```toml
+   GEMINI_API_KEY = "your-key"
+   ```
+5. Click **Deploy**.
+
+> Never commit your API key. For local development with secrets, create `.streamlit/secrets.toml` and keep it out of git (see `.gitignore` below).
+
+Suggested `.gitignore`:
+
+```
+venv/
+__pycache__/
+.streamlit/secrets.toml
+.env
+```
+
+## Models
+
+The default model is `gemini-3.5-flash`. You can switch models from the sidebar, or edit `DEFAULT_MODEL` and `MODEL_CHOICES` at the top of `app.py` if Google renames or retires a model.
+
+## Project structure
+
+```
+ats-resume-checker/
+├── app.py            # Streamlit app
+├── requirements.txt  # Python dependencies
+└── README.md
+```
+
+## Limitations
+
+- Scanned (image-only) PDFs have no extractable text. An ATS cannot read them either, so export a text-based PDF or upload a DOCX.
+- The score is an AI estimate, not the output of any specific commercial ATS. Use it as guidance, not a guarantee.
+- Your resume is sent to the Gemini API for analysis. Don't upload documents you aren't comfortable sharing.
+
+## License
+
+MIT
